@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "CBag Site Blocker",
-  "description": "Bloque des sites web selon une liste personnalisable.",
+  "name": "Cbag Site Blocker",
+  "description": "Bloque automatiquement des sites selon des groupes et des horaires, avec redirection immediate meme sans rechargement.",
   "version": "1.0.0",
   "permissions": ["storage", "tabs", "webNavigation", "alarms"],
   "host_permissions": ["<all_urls>"],
@@ -15,7 +15,7 @@
     "128": "icons/icon128.png"
   },
   "action": {
-    "default_title": "CBag Site Blocker",
+    "default_title": "Cbag Site Blocker",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",

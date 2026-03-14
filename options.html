@@ -14,8 +14,8 @@
         <div class="hero">
           <img src="logo.svg" alt="Logo CBag Site Blocker" class="hero-logo" />
           <div>
-          <h1>Liste de blocage</h1>
-          <p class="sub">Bloquer les sites en permanence ou selon une programmation.</p>
+          <h1>Configuration du blocage</h1>
+          <p class="sub">Cree des groupes de sites, definis des plages horaires, et applique un blocage automatique sans attendre un rechargement.</p>
           </div>
         </div>
         <label class="toggle">
@@ -24,7 +24,7 @@
         </label>
       </header>
 
-      <section class="stats" aria-label="Resume des regles">
+      <section class="stats" aria-label="Resume detaille des regles">
         <article class="stat-card">
           <span class="stat-label">Groupes</span>
           <strong id="groupsCount" class="stat-value">0</strong>
@@ -41,7 +41,7 @@
 
       <section class="card">
         <div class="top-actions">
-          <button id="openAddModalBtn" type="button" class="add-btn">+ Ajouter a la liste de blocage</button>
+          <button id="openAddModalBtn" type="button" class="add-btn">+ Ajouter un groupe de blocage</button>
         </div>
         <p id="pageStatus" class="status">Pret.</p>
       </section>
@@ -57,8 +57,8 @@
       <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <header class="modal-head">
           <div>
-            <h2 id="modalTitle">Ajouter a la liste de blocage</h2>
-            <p class="hint">Choisis une categorie ou cree un groupe personnalise.</p>
+            <h2 id="modalTitle">Ajouter un groupe de blocage</h2>
+            <p class="hint">Choisis une categorie predefinie ou cree un groupe personnalise avec tes propres sites et horaires.</p>
           </div>
           <button id="closeAddModalBtn" class="icon-btn" type="button" aria-label="Fermer">x</button>
         </header>
@@ -87,7 +87,7 @@
                 <button type="button" id="addCategoryIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
                 <button type="button" id="confirmCategoryBtn" class="add-btn">Ajouter la categorie</button>
               </div>
-              <p class="hint">Sans intervalle: blocage 24h/24 pour cette categorie.</p>
+              <p class="hint">Sans intervalle: blocage 24h/24 pour cette categorie. Avec intervalle: activation automatique a l'heure definie.</p>
             </div>
           </section>
 
@@ -112,7 +112,7 @@
                 <div id="intervalRows" class="interval-rows"></div>
               </label>
               <button type="button" id="addIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
-              <p class="hint">Sans intervalle: blocage 24h/24 pour ce groupe.</p>
+              <p class="hint">Sans intervalle: blocage 24h/24 pour ce groupe. Les nouveaux horaires sont appliques automatiquement toutes les minutes.</p>
               <div class="modal-actions">
                 <button type="button" id="cancelAddModalBtn" class="ghost-btn">Annuler</button>
                 <button type="submit" class="add-btn">Ajouter a la liste de blocage</button>
@@ -129,7 +129,7 @@
         <header class="modal-head">
           <div>
             <h2 id="editModalTitle">Modifier un groupe</h2>
-            <p class="hint">Mets a jour les sites et les intervalles de ce groupe.</p>
+            <p class="hint">Mets a jour les sites et les intervalles de ce groupe. Les changements sont pris en compte immediatement.</p>
           </div>
           <button id="closeEditModalBtn" class="icon-btn" type="button" aria-label="Fermer">x</button>
         </header>
@@ -151,7 +151,7 @@
                 <div id="editIntervalRows" class="interval-rows"></div>
               </label>
               <button type="button" id="addEditIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
-              <p class="hint">Sans intervalle: blocage 24h/24 pour ce groupe.</p>
+              <p class="hint">Sans intervalle: blocage 24h/24 pour ce groupe. Avec intervalle: blocage actif uniquement pendant les plages configurees.</p>
               <div class="modal-actions">
                 <button type="button" id="cancelEditModalBtn" class="ghost-btn">Annuler</button>
                 <button type="submit" class="add-btn">Enregistrer</button>
