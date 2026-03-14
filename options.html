@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f3f4f6" />
+    <title>Configuration CBag Site Blocker</title>
+    <link rel="icon" type="image/svg+xml" href="logo.svg" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <div class="hero">
+          <img src="logo.svg" alt="Logo CBag Site Blocker" class="hero-logo" />
+          <div>
+          <h1>Liste de blocage</h1>
+          <p class="sub">Bloquer les sites en permanence ou selon une programmation.</p>
+          </div>
+        </div>
+        <label class="toggle">
+          <input id="enabledToggle" type="checkbox" />
+          <span>Protection globale active</span>
+        </label>
+      </header>
+
+      <section class="stats" aria-label="Resume des regles">
+        <article class="stat-card">
+          <span class="stat-label">Groupes</span>
+          <strong id="groupsCount" class="stat-value">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Sites</span>
+          <strong id="sitesCount" class="stat-value">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Actifs</span>
+          <strong id="activeGroupsCount" class="stat-value">0</strong>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="top-actions">
+          <button id="openAddModalBtn" type="button" class="add-btn">+ Ajouter a la liste de blocage</button>
+        </div>
+        <p id="pageStatus" class="status">Pret.</p>
+      </section>
+
+      <section class="card">
+        <h2>Groupes configures</h2>
+        <ul id="groupsList" class="groups"></ul>
+      </section>
+    </main>
+
+    <div id="addModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal="true"></div>
+      <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <header class="modal-head">
+          <div>
+            <h2 id="modalTitle">Ajouter a la liste de blocage</h2>
+            <p class="hint">Choisis une categorie ou cree un groupe personnalise.</p>
+          </div>
+          <button id="closeAddModalBtn" class="icon-btn" type="button" aria-label="Fermer">x</button>
+        </header>
+
+        <div class="modal-content">
+          <section class="modal-section">
+            <h3>Ajouter par categorie</h3>
+            <div id="categoryGrid" class="category-grid">
+              <button type="button" class="category-btn" data-category="social">
+                <span class="cat-title">Social</span>
+                <span class="cat-sub">Facebook, Instagram, TikTok, X...</span>
+              </button>
+              <button type="button" class="category-btn" data-category="adult">
+                <span class="cat-title">Adulte</span>
+                <span class="cat-sub">Sites adultes frequents</span>
+              </button>
+              <button type="button" class="category-btn" data-category="news">
+                <span class="cat-title">Actualites</span>
+                <span class="cat-sub">Presse et medias en ligne</span>
+              </button>
+            </div>
+            <div id="categoryConfig" class="category-config hidden">
+              <p id="selectedCategoryLabel" class="hint">Categorie selectionnee: -</p>
+              <div id="categoryIntervalRows" class="interval-rows"></div>
+              <div class="category-actions">
+                <button type="button" id="addCategoryIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
+                <button type="button" id="confirmCategoryBtn" class="add-btn">Ajouter la categorie</button>
+              </div>
+              <p class="hint">Sans intervalle: blocage 24h/24 pour cette categorie.</p>
+            </div>
+          </section>
+
+          <section class="modal-section">
+            <h3>Ajouter un groupe personnalise</h3>
+            <form id="groupForm" class="grid-form">
+              <label>
+                Nom du groupe
+                <input id="groupNameInput" type="text" placeholder="Ex: Reseaux sociaux" required />
+              </label>
+              <label>
+                Sites (separes par virgule)
+                <input
+                  id="groupSitesInput"
+                  type="text"
+                  placeholder="facebook.com, instagram.com, *.tiktok.com"
+                  required
+                />
+              </label>
+              <label>
+                Intervalles
+                <div id="intervalRows" class="interval-rows"></div>
+              </label>
+              <button type="button" id="addIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
+              <p class="hint">Sans intervalle: blocage 24h/24 pour ce groupe.</p>
+              <div class="modal-actions">
+                <button type="button" id="cancelAddModalBtn" class="ghost-btn">Annuler</button>
+                <button type="submit" class="add-btn">Ajouter a la liste de blocage</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </section>
+    </div>
+
+    <div id="editModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-backdrop" data-close-edit-modal="true"></div>
+      <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+        <header class="modal-head">
+          <div>
+            <h2 id="editModalTitle">Modifier un groupe</h2>
+            <p class="hint">Mets a jour les sites et les intervalles de ce groupe.</p>
+          </div>
+          <button id="closeEditModalBtn" class="icon-btn" type="button" aria-label="Fermer">x</button>
+        </header>
+
+        <div class="modal-content">
+          <section class="modal-section">
+            <form id="editGroupForm" class="grid-form">
+              <input id="editingGroupId" type="hidden" />
+              <label>
+                Nom du groupe
+                <input id="editGroupNameInput" type="text" required />
+              </label>
+              <label>
+                Sites (separes par virgule)
+                <input id="editGroupSitesInput" type="text" required />
+              </label>
+              <label>
+                Intervalles
+                <div id="editIntervalRows" class="interval-rows"></div>
+              </label>
+              <button type="button" id="addEditIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
+              <p class="hint">Sans intervalle: blocage 24h/24 pour ce groupe.</p>
+              <div class="modal-actions">
+                <button type="button" id="cancelEditModalBtn" class="ghost-btn">Annuler</button>
+                <button type="submit" class="add-btn">Enregistrer</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </section>
+    </div>
+
+    <script src="shared.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

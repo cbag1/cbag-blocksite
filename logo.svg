@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">CBag Site Blocker</title>
+  <desc id="desc">Un bouclier simple avec la lettre C et une barre de blocage.</desc>
+  <defs>
+    <linearGradient id="shieldFill" x1="18" y1="14" x2="108" y2="114" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2d7ff0" />
+      <stop offset="1" stop-color="#37d8a4" />
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="#0d1426" />
+  <path
+    d="M64 16c15 10 29 14 42 16v28c0 23-16 42-42 52C38 102 22 83 22 60V32c13-2 27-6 42-16Z"
+    fill="url(#shieldFill)"
+  />
+  <path
+    d="M79 42c-4-5-10-8-17-8-13 0-23 10-23 23s10 23 23 23c7 0 13-3 17-8"
+    fill="none"
+    stroke="#ecf3ff"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="10"
+  />
+  <path
+    d="M48 82 86 44"
+    fill="none"
+    stroke="#ff9b5d"
+    stroke-linecap="round"
+    stroke-width="12"
+  />
+</svg>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0d1426" />
+    <title>CBag Site Blocker</title>
+    <link rel="icon" type="image/svg+xml" href="logo.svg" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="brand">
+        <img src="logo.svg" alt="Logo CBag Site Blocker" class="brand-logo" />
+        <div>
+          <h1>CBag Site Blocker</h1>
+          <p class="brand-sub">Blocage rapide du site courant</p>
+        </div>
+      </header>
+      <p id="siteLabel" class="site">Site actuel: chargement...</p>
+      <p id="siteHint" class="hint">Verification des regles existantes...</p>
+
+      <div class="actions">
+        <button id="blockSiteBtn" type="button" class="primary">Bloquer le site</button>
+        <button id="openOptionsBtn" type="button" class="secondary">Modifier la liste de blocs</button>
+      </div>
+
+      <p id="status" class="status">Pret.</p>
+    </main>
+
+    <script src="shared.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

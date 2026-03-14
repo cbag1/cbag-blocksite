@@ -1,0 +1,100 @@
+:root {
+  --bg: #0d1426;
+  --panel: #18243d;
+  --text: #edf3ff;
+  --muted: #adbbd6;
+  --accent: #37d8a4;
+  --accent-2: #2d7ff0;
+  --danger: #ff7e7e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 340px;
+  background:
+    radial-gradient(circle at 0% 0%, #22467e 0%, transparent 44%),
+    radial-gradient(circle at 100% 100%, #27434f 0%, transparent 38%),
+    var(--bg);
+  color: var(--text);
+  font: 14px/1.4 "IBM Plex Sans", "Segoe UI", sans-serif;
+}
+
+.app {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.brand {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.brand-logo {
+  width: 44px;
+  height: 44px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.brand-sub,
+.hint {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.actions {
+  display: grid;
+  gap: 8px;
+}
+
+.primary {
+  background: var(--accent);
+  color: #03241c;
+}
+
+.secondary {
+  background: var(--accent-2);
+  color: #f2f7ff;
+}
+
+.site {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--panel), transparent 8%);
+  color: var(--muted);
+}
+
+.status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.status.error {
+  color: var(--danger);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
