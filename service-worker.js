@@ -138,3 +138,35 @@ chrome.webNavigation.onBeforeNavigate.addListener((details) => {
     console.error("Navigation handler failed", error);
   });
 });
+
+async function checkAndRedirectAllTabs() {
+  const { enabled, groups } = await getSettings();
+  if (!enabled || !groups.length) return;
+
+  const tabs = await chrome.tabs.query({ url: ["http://*/*", "https://*/*"] });
+  for (const tab of tabs) {
+    if (!tab.url || tab.url.startsWith(blockedPage)) continue;
+
+    const match = findBlockingGroup(tab.url, groups);
+    if (!match) continue;
+
+    const redirectUrl =
+      `${blockedPage}?blocked=${encodeURIComponent(tab.url)}` +
+      `&rule=${encodeURIComponent(match.matchedPattern)}` +
+      `&group=${encodeURIComponent(match.group.name)}`;
+
+    chrome.tabs.update(tab.id, { url: redirectUrl }).catch(() => {});
+  }
+}
+
+const INTERVAL_ALARM = "intervalCheck";
+
+chrome.alarms.create(INTERVAL_ALARM, { periodInMinutes: 1 });
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === INTERVAL_ALARM) {
+    checkAndRedirectAllTabs().catch((error) => {
+      console.error("Interval alarm check failed", error);
+    });
+  }
+});

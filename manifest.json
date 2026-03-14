@@ -3,7 +3,7 @@
   "name": "CBag Site Blocker",
   "description": "Bloque des sites web selon une liste personnalisable.",
   "version": "1.0.0",
-  "permissions": ["storage", "tabs", "webNavigation"],
+  "permissions": ["storage", "tabs", "webNavigation", "alarms"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "service-worker.js"
