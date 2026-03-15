@@ -4,7 +4,7 @@
   "description": "Bloque automatiquement des sites selon des groupes et des horaires, avec redirection immediate meme sans rechargement.",
   "version": "1.0.0",
   "permissions": ["storage", "tabs", "webNavigation", "alarms"],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": ["http://*/*", "https://*/*"],
   "background": {
     "service_worker": "service-worker.js"
   },
