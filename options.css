@@ -188,6 +188,45 @@ h2 {
   gap: 12px;
 }
 
+.weekday-fieldset {
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 10px;
+  margin: 0;
+}
+
+.weekday-fieldset legend {
+  padding: 0 6px;
+  color: #374151;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.weekday-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.weekday-picker label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+.weekday-picker input {
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
 .interval-rows {
   display: grid;
   gap: 8px;

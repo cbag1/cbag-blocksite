@@ -1,7 +1,17 @@
 const ENABLED_KEY = "enabled";
 const GROUPS_KEY = "siteGroups";
+const WEEKDAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
+const WEEKDAY_LABELS = {
+  0: "Dim",
+  1: "Lun",
+  2: "Mar",
+  3: "Mer",
+  4: "Jeu",
+  5: "Ven",
+  6: "Sam"
+};
 
-const { createId, normalizePattern, normalizeInterval, sanitizeGroups, splitCsv } = window.BlocksiteShared;
+const { createId, normalizePattern, normalizeInterval, normalizeDays, sanitizeGroups, splitCsv } = window.BlocksiteShared;
 
 const enabledToggle = document.getElementById("enabledToggle");
 const groupsList = document.getElementById("groupsList");
@@ -13,6 +23,7 @@ const groupForm = document.getElementById("groupForm");
 const groupNameInput = document.getElementById("groupNameInput");
 const groupSitesInput = document.getElementById("groupSitesInput");
 const intervalRows = document.getElementById("intervalRows");
+const addDaysPicker = document.getElementById("addDaysPicker");
 const addIntervalBtn = document.getElementById("addIntervalBtn");
 
 const pageStatus = document.getElementById("pageStatus");
@@ -21,6 +32,7 @@ const categoryGrid = document.getElementById("categoryGrid");
 const categoryConfig = document.getElementById("categoryConfig");
 const selectedCategoryLabel = document.getElementById("selectedCategoryLabel");
 const categoryIntervalRows = document.getElementById("categoryIntervalRows");
+const categoryDaysPicker = document.getElementById("categoryDaysPicker");
 const addCategoryIntervalBtn = document.getElementById("addCategoryIntervalBtn");
 const confirmCategoryBtn = document.getElementById("confirmCategoryBtn");
 
@@ -37,6 +49,7 @@ const editingGroupId = document.getElementById("editingGroupId");
 const editGroupNameInput = document.getElementById("editGroupNameInput");
 const editGroupSitesInput = document.getElementById("editGroupSitesInput");
 const editIntervalRows = document.getElementById("editIntervalRows");
+const editDaysPicker = document.getElementById("editDaysPicker");
 const addEditIntervalBtn = document.getElementById("addEditIntervalBtn");
 
 let selectedCategoryKey = "";
@@ -147,6 +160,38 @@ function setStatus(message, tone = "neutral") {
   if (tone === "error") pageStatus.classList.add("error");
 }
 
+function collectSelectedDays(container) {
+  if (!container) return [];
+
+  const checks = container.querySelectorAll('input[type="checkbox"]');
+  const selected = Array.from(checks)
+    .filter((checkbox) => checkbox.checked)
+    .map((checkbox) => Number(checkbox.value));
+
+  return normalizeDays(selected);
+}
+
+function setSelectedDays(container, days) {
+  if (!container) return;
+
+  const checks = container.querySelectorAll('input[type="checkbox"]');
+  const normalized = normalizeDays(days);
+  const targetDays = normalized.length ? normalized : WEEKDAY_ORDER;
+
+  for (const checkbox of checks) {
+    checkbox.checked = targetDays.includes(Number(checkbox.value));
+  }
+}
+
+function formatDays(days) {
+  const normalized = normalizeDays(days);
+  if (normalized.length === 0 || normalized.length === 7) {
+    return ["Tous les jours"];
+  }
+
+  return normalized.map((day) => WEEKDAY_LABELS[day] || String(day));
+}
+
 function isModalOpen() {
   const addOpen = Boolean(addModal && !addModal.classList.contains("hidden"));
   const editOpen = Boolean(editModal && !editModal.classList.contains("hidden"));
@@ -166,6 +211,8 @@ function openAddModal() {
   if (categoryConfig) categoryConfig.classList.add("hidden");
   if (selectedCategoryLabel) selectedCategoryLabel.textContent = "Categorie selectionnee: -";
   resetIntervalRows(categoryIntervalRows);
+  setSelectedDays(categoryDaysPicker, WEEKDAY_ORDER);
+  setSelectedDays(addDaysPicker, WEEKDAY_ORDER);
 
   const buttons = categoryGrid?.querySelectorAll(".category-btn") || [];
   for (const button of buttons) {
@@ -181,6 +228,8 @@ function closeAddModal() {
   addModal.setAttribute("aria-hidden", "true");
   groupForm?.reset();
   resetIntervalRows(intervalRows);
+  setSelectedDays(addDaysPicker, WEEKDAY_ORDER);
+  setSelectedDays(categoryDaysPicker, WEEKDAY_ORDER);
 }
 
 function openEditModal(group) {
@@ -190,6 +239,7 @@ function openEditModal(group) {
   editGroupNameInput.value = group.name;
   editGroupSitesInput.value = group.patterns.join(", ");
   fillIntervalRows(editIntervalRows, group.intervals);
+  setSelectedDays(editDaysPicker, group.days);
 
   editModal.classList.remove("hidden");
   editModal.setAttribute("aria-hidden", "false");
@@ -202,6 +252,7 @@ function closeEditModal() {
   editModal.setAttribute("aria-hidden", "true");
   editGroupForm?.reset();
   resetIntervalRows(editIntervalRows);
+  setSelectedDays(editDaysPicker, WEEKDAY_ORDER);
 }
 
 function renderStats(groups) {
@@ -278,6 +329,15 @@ function renderGroups(groups) {
       }
     }
 
+    const days = document.createElement("div");
+    days.className = "chips";
+    for (const dayLabel of formatDays(group.days)) {
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = dayLabel;
+      days.appendChild(chip);
+    }
+
     const actions = document.createElement("div");
     actions.className = "actions";
 
@@ -297,7 +357,7 @@ function renderGroups(groups) {
 
     actions.append(editButton, removeButton);
 
-    li.append(head, sites, intervals, actions);
+    li.append(head, sites, intervals, days, actions);
     groupsList.appendChild(li);
   }
 }
@@ -334,7 +394,7 @@ function renderCategoryState(groups) {
   }
 }
 
-async function addGroup(name, sitesCsv, intervals) {
+async function addGroup(name, sitesCsv, intervals, days) {
   const nameValue = name.trim();
   const patterns = splitCsv(sitesCsv).map(normalizePattern).filter(Boolean);
 
@@ -348,14 +408,15 @@ async function addGroup(name, sitesCsv, intervals) {
     name: nameValue,
     enabled: true,
     patterns: Array.from(new Set(patterns)),
-    intervals: Array.from(new Set(Array.isArray(intervals) ? intervals : []))
+    intervals: Array.from(new Set(Array.isArray(intervals) ? intervals : [])),
+    days: normalizeDays(days)
   };
 
   await chrome.storage.local.set({ [GROUPS_KEY]: [...groups, nextGroup] });
   return true;
 }
 
-async function updateGroup(groupId, name, sitesCsv, intervals) {
+async function updateGroup(groupId, name, sitesCsv, intervals, days) {
   const nameValue = name.trim();
   const patterns = splitCsv(sitesCsv).map(normalizePattern).filter(Boolean);
 
@@ -373,7 +434,8 @@ async function updateGroup(groupId, name, sitesCsv, intervals) {
       ...group,
       name: nameValue,
       patterns: Array.from(new Set(patterns)),
-      intervals: Array.from(new Set(Array.isArray(intervals) ? intervals : []))
+      intervals: Array.from(new Set(Array.isArray(intervals) ? intervals : [])),
+      days: normalizeDays(days)
     };
   });
 
@@ -383,7 +445,7 @@ async function updateGroup(groupId, name, sitesCsv, intervals) {
   return true;
 }
 
-async function addPresetCategory(categoryKey, intervals = []) {
+async function addPresetCategory(categoryKey, intervals = [], days = []) {
   const preset = CATEGORY_PRESETS[categoryKey];
   if (!preset) return false;
 
@@ -397,7 +459,8 @@ async function addPresetCategory(categoryKey, intervals = []) {
       name: preset.name,
       enabled: true,
       patterns: Array.from(new Set(preset.patterns.map(normalizePattern).filter(Boolean))),
-      intervals: Array.from(new Set(intervals))
+      intervals: Array.from(new Set(intervals)),
+      days: normalizeDays(days)
     });
   } else {
     const mergedPatterns = Array.from(
@@ -408,7 +471,8 @@ async function addPresetCategory(categoryKey, intervals = []) {
       ...groups[existingIndex],
       enabled: true,
       patterns: mergedPatterns,
-      intervals: Array.from(new Set(intervals))
+      intervals: Array.from(new Set(intervals)),
+      days: normalizeDays(days)
     };
   }
 
@@ -437,12 +501,18 @@ enabledToggle?.addEventListener("change", async () => {
 groupForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
   const { intervals, hasInvalid } = collectIntervalsFromRows(intervalRows);
+  const days = collectSelectedDays(addDaysPicker);
   if (hasInvalid) {
     setStatus("Au moins un intervalle est invalide. Utilise des heures valides.", "error");
     return;
   }
 
-  const created = await addGroup(groupNameInput.value, groupSitesInput.value, intervals);
+  if (days.length === 0) {
+    setStatus("Selectionne au moins un jour de blocage.", "error");
+    return;
+  }
+
+  const created = await addGroup(groupNameInput.value, groupSitesInput.value, intervals, days);
   if (!created) {
     setStatus("Verifie le nom du groupe et au moins un site valide.", "error");
     return;
@@ -460,12 +530,18 @@ editGroupForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const { intervals, hasInvalid } = collectIntervalsFromRows(editIntervalRows);
+  const days = collectSelectedDays(editDaysPicker);
   if (hasInvalid) {
     setStatus("Au moins un intervalle est invalide dans la modification.", "error");
     return;
   }
 
-  const updated = await updateGroup(editingGroupId.value, editGroupNameInput.value, editGroupSitesInput.value, intervals);
+  if (days.length === 0) {
+    setStatus("Selectionne au moins un jour pour ce groupe.", "error");
+    return;
+  }
+
+  const updated = await updateGroup(editingGroupId.value, editGroupNameInput.value, editGroupSitesInput.value, intervals, days);
   if (!updated) {
     setStatus("Impossible de modifier ce groupe.", "error");
     return;
@@ -521,12 +597,18 @@ confirmCategoryBtn?.addEventListener("click", async () => {
   }
 
   const { intervals, hasInvalid } = collectIntervalsFromRows(categoryIntervalRows);
+  const days = collectSelectedDays(categoryDaysPicker);
   if (hasInvalid) {
     setStatus("Au moins un intervalle de categorie est invalide.", "error");
     return;
   }
 
-  const created = await addPresetCategory(selectedCategoryKey, intervals);
+  if (days.length === 0) {
+    setStatus("Selectionne au moins un jour pour cette categorie.", "error");
+    return;
+  }
+
+  const created = await addPresetCategory(selectedCategoryKey, intervals, days);
   if (!created) {
     setStatus("Impossible d'ajouter cette categorie.", "error");
     return;
@@ -594,6 +676,10 @@ if (categoryIntervalRows && categoryIntervalRows.children.length === 0) {
 if (editIntervalRows && editIntervalRows.children.length === 0) {
   editIntervalRows.appendChild(createIntervalRow(editIntervalRows));
 }
+
+setSelectedDays(addDaysPicker, WEEKDAY_ORDER);
+setSelectedDays(editDaysPicker, WEEKDAY_ORDER);
+setSelectedDays(categoryDaysPicker, WEEKDAY_ORDER);
 
 groupsList?.addEventListener("click", async (event) => {
   const target = event.target;

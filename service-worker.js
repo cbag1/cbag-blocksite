@@ -26,7 +26,7 @@ function findBlockingGroup(url, groups) {
 
     const matchedPattern = group.patterns.find((pattern) => hostMatchesPattern(hostname, pattern));
     if (!matchedPattern) continue;
-    if (!isBlockingActiveNow(group.intervals)) continue;
+    if (!isBlockingActiveNow(group.intervals, group.days)) continue;
 
     return {
       group,

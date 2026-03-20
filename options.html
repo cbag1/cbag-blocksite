@@ -83,6 +83,18 @@
             <div id="categoryConfig" class="category-config hidden">
               <p id="selectedCategoryLabel" class="hint">Categorie selectionnee: -</p>
               <div id="categoryIntervalRows" class="interval-rows"></div>
+                <fieldset class="weekday-fieldset">
+                  <legend>Jours de blocage</legend>
+                  <div id="categoryDaysPicker" class="weekday-picker">
+                    <label><input type="checkbox" value="1" checked /> Lun</label>
+                    <label><input type="checkbox" value="2" checked /> Mar</label>
+                    <label><input type="checkbox" value="3" checked /> Mer</label>
+                    <label><input type="checkbox" value="4" checked /> Jeu</label>
+                    <label><input type="checkbox" value="5" checked /> Ven</label>
+                    <label><input type="checkbox" value="6" checked /> Sam</label>
+                    <label><input type="checkbox" value="0" checked /> Dim</label>
+                  </div>
+                </fieldset>
               <div class="category-actions">
                 <button type="button" id="addCategoryIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
                 <button type="button" id="confirmCategoryBtn" class="add-btn">Ajouter la categorie</button>
@@ -111,6 +123,18 @@
                 Intervalles
                 <div id="intervalRows" class="interval-rows"></div>
               </label>
+              <fieldset class="weekday-fieldset">
+                <legend>Jours de blocage</legend>
+                <div id="addDaysPicker" class="weekday-picker">
+                  <label><input type="checkbox" value="1" checked /> Lun</label>
+                  <label><input type="checkbox" value="2" checked /> Mar</label>
+                  <label><input type="checkbox" value="3" checked /> Mer</label>
+                  <label><input type="checkbox" value="4" checked /> Jeu</label>
+                  <label><input type="checkbox" value="5" checked /> Ven</label>
+                  <label><input type="checkbox" value="6" checked /> Sam</label>
+                  <label><input type="checkbox" value="0" checked /> Dim</label>
+                </div>
+              </fieldset>
               <button type="button" id="addIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
               <p class="hint">Sans intervalle: blocage 24h/24 pour ce groupe. Les nouveaux horaires sont appliques automatiquement toutes les minutes.</p>
               <div class="modal-actions">
@@ -150,6 +174,18 @@
                 Intervalles
                 <div id="editIntervalRows" class="interval-rows"></div>
               </label>
+              <fieldset class="weekday-fieldset">
+                <legend>Jours de blocage</legend>
+                <div id="editDaysPicker" class="weekday-picker">
+                  <label><input type="checkbox" value="1" checked /> Lun</label>
+                  <label><input type="checkbox" value="2" checked /> Mar</label>
+                  <label><input type="checkbox" value="3" checked /> Mer</label>
+                  <label><input type="checkbox" value="4" checked /> Jeu</label>
+                  <label><input type="checkbox" value="5" checked /> Ven</label>
+                  <label><input type="checkbox" value="6" checked /> Sam</label>
+                  <label><input type="checkbox" value="0" checked /> Dim</label>
+                </div>
+              </fieldset>
               <button type="button" id="addEditIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
               <p class="hint">Sans intervalle: blocage 24h/24 pour ce groupe. Avec intervalle: blocage actif uniquement pendant les plages configurees.</p>
               <div class="modal-actions">

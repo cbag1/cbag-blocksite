@@ -78,7 +78,27 @@
     return nowMinutes >= startMinutes || nowMinutes < endMinutes;
   }
 
-  function isBlockingActiveNow(intervals, now = new Date()) {
+  function normalizeDays(rawDays) {
+    if (!Array.isArray(rawDays)) return [];
+
+    const unique = Array.from(
+      new Set(
+        rawDays
+          .map((day) => Number(day))
+          .filter((day) => Number.isInteger(day) && day >= 0 && day <= 6)
+      )
+    );
+
+    const dayOrder = [1, 2, 3, 4, 5, 6, 0];
+    return unique.sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b));
+  }
+
+  function isBlockingActiveNow(intervals, days = [], now = new Date()) {
+    const normalizedDays = normalizeDays(days);
+    if (normalizedDays.length && !normalizedDays.includes(now.getDay())) {
+      return false;
+    }
+
     if (!intervals.length) return true;
 
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
@@ -99,10 +119,11 @@
         const intervals = Array.isArray(group?.intervals)
           ? Array.from(new Set(group.intervals.map(normalizeInterval).filter(Boolean)))
           : [];
+        const days = normalizeDays(group?.days);
 
         if (!patterns.length) return null;
 
-        return { id, name, enabled, patterns, intervals };
+        return { id, name, enabled, patterns, intervals, days };
       })
       .filter(Boolean);
   }
@@ -121,6 +142,7 @@
     tryGetHostname,
     isValidTime,
     normalizeInterval,
+    normalizeDays,
     isBlockingActiveNow,
     sanitizeGroups,
     splitCsv

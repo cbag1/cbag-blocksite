@@ -10,6 +10,7 @@ Elle permet de combiner des regles simples (domaines) avec des plages horaires, 
 - Page de configuration dediee (hors popup)
 - Groupes de sites (ex: "Reseaux sociaux", "Streaming")
 - Intervalles de blocage par groupe
+- Jours de blocage par groupe (Lun a Dim)
 - Support de domaines simples et wildcard (`*.domaine.com`)
 - Redirection vers une page locale de blocage
 - Activation automatique du blocage a l'entree d'un intervalle, sans rechargement manuel des onglets
@@ -27,15 +28,16 @@ Elle permet de combiner des regles simples (domaines) avec des plages horaires, 
 - Cliquer sur l'icone puis ouvrir la configuration detaillee.
 - Creer un groupe avec ses sites (exemples: `facebook.com`, `*.tiktok.com`).
 - Definir des intervalles du groupe (exemple: `09:00-12:00, 14:00-18:00`).
+- Choisir les jours de blocage du groupe (exemple: Lun-Ven).
 - Laisser vide les intervalles pour un blocage permanent (24h/24).
 - Quand une plage horaire demarre, les onglets deja ouverts sont controles automatiquement et rediriges si besoin.
 
-Si un groupe n'a aucun intervalle, son blocage est actif toute la journee.
+Si un groupe n'a aucun intervalle, son blocage est actif toute la journee sur les jours selectionnes.
 
 ## Comment fonctionne le blocage
 
 - A chaque navigation, l'URL est comparee aux groupes actifs.
-- Si un domaine correspond et que l'horaire du groupe est actif, l'onglet est redirige vers `blocked.html`.
+- Si un domaine correspond, que le jour est autorise et que l'horaire du groupe est actif, l'onglet est redirige vers `blocked.html`.
 - En plus, une verification periodique (toutes les minutes) controle les onglets deja ouverts.
 - Resultat: le blocage s'active au bon moment, meme sans action manuelle (ni rechargement de page).
 
@@ -44,6 +46,6 @@ Si un groupe n'a aucun intervalle, son blocage est actif toute la journee.
 L'extension utilise `chrome.storage.local` avec:
 
 - `enabled`: activation globale
-- `siteGroups`: liste des groupes `{ id, name, enabled, patterns, intervals }`
+- `siteGroups`: liste des groupes `{ id, name, enabled, patterns, intervals, days }`
 
 Compatibilite: les anciennes cles `blockedPatterns` et `activeIntervals` sont migrees automatiquement vers un groupe.
