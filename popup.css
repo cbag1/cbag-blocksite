@@ -1,11 +1,13 @@
 :root {
-  --bg: #0d1426;
-  --panel: #18243d;
-  --text: #edf3ff;
-  --muted: #adbbd6;
-  --accent: #37d8a4;
-  --accent-2: #2d7ff0;
-  --danger: #ff7e7e;
+  --bg: #f4f6fa;
+  --card: #ffffff;
+  --line: #e2e8f0;
+  --text: #0f172a;
+  --muted: #64748b;
+  --primary: #10b981;
+  --primary-ink: #052018;
+  --secondary: #2563eb;
+  --danger: #dc2626;
 }
 
 * {
@@ -15,18 +17,20 @@
 body {
   margin: 0;
   min-width: 340px;
-  background:
-    radial-gradient(circle at 0% 0%, #22467e 0%, transparent 44%),
-    radial-gradient(circle at 100% 100%, #27434f 0%, transparent 38%),
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
-  font: 14px/1.4 "IBM Plex Sans", "Segoe UI", sans-serif;
+  font: 14px/1.45 "Manrope", "IBM Plex Sans", "Segoe UI", sans-serif;
 }
 
 .app {
+  margin: 12px;
   padding: 16px;
   display: grid;
   gap: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 }
 
 .brand {
@@ -37,13 +41,14 @@ body {
 }
 
 .brand-logo {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
 }
 
 h1 {
   margin: 0;
   font-size: 18px;
+  line-height: 1.2;
 }
 
 .brand-sub,
@@ -53,12 +58,13 @@ h1 {
   font-size: 12px;
 }
 
-button {
-  border: 0;
-  border-radius: 10px;
+.site {
+  margin: 0;
   padding: 10px 12px;
-  font-weight: 700;
-  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #f8fafc;
+  color: #334155;
 }
 
 .actions {
@@ -66,22 +72,27 @@ button {
   gap: 8px;
 }
 
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 120ms ease;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(0.97);
+}
+
 .primary {
-  background: var(--accent);
-  color: #03241c;
+  background: var(--primary);
+  color: var(--primary-ink);
 }
 
 .secondary {
-  background: var(--accent-2);
-  color: #f2f7ff;
-}
-
-.site {
-  margin: 0;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--panel), transparent 8%);
-  color: var(--muted);
+  background: var(--secondary);
+  color: #f8fbff;
 }
 
 .status {
@@ -92,9 +103,10 @@ button {
 
 .status.error {
   color: var(--danger);
+  font-weight: 700;
 }
 
 button:disabled {
-  opacity: 0.55;
+  opacity: 0.56;
   cursor: not-allowed;
 }
