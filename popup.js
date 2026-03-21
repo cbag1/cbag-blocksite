@@ -11,6 +11,17 @@ const openOptionsBtn = document.getElementById("openOptionsBtn");
 
 let currentHostname = "";
 
+function isExtensionPage(url) {
+  if (!url) return false;
+
+  try {
+    const protocol = new URL(url).protocol;
+    return protocol === "chrome-extension:" || protocol === "moz-extension:";
+  } catch {
+    return false;
+  }
+}
+
 function setStatus(message, isError = false) {
   status.textContent = message;
   status.classList.toggle("error", isError);
@@ -33,6 +44,18 @@ async function loadCurrentSite() {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   const activeTab = tabs[0];
   const url = activeTab?.url || "";
+
+  if (isExtensionPage(url)) {
+    currentHostname = "";
+    siteLabel.textContent = "Site actuel: page d'extension";
+    blockSiteBtn.hidden = true;
+    blockSiteBtn.disabled = true;
+    if (siteHint) siteHint.textContent = "Le blocage rapide n'est pas disponible sur les pages d'extension.";
+    setStatus("Blocage non applicable sur cette page.");
+    return;
+  }
+
+  blockSiteBtn.hidden = false;
 
   currentHostname = normalizePattern(tryGetHostname(url));
   if (!currentHostname) {
