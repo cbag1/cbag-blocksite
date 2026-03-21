@@ -96,10 +96,15 @@ async function handleNavigation(details) {
   const match = findBlockingGroup(details.url, groups);
   if (!match) return;
 
+  const intervalsParam = match.group.intervals.length 
+    ? match.group.intervals.join(",")
+    : "";
+
   const redirectUrl =
     `${blockedPage}?blocked=${encodeURIComponent(details.url)}` +
     `&rule=${encodeURIComponent(match.matchedPattern)}` +
-    `&group=${encodeURIComponent(match.group.name)}`;
+    `&group=${encodeURIComponent(match.group.name)}` +
+    (intervalsParam ? `&intervals=${encodeURIComponent(intervalsParam)}` : "");
 
   await chrome.tabs.update(details.tabId, { url: redirectUrl });
 }

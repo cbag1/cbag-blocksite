@@ -74,14 +74,49 @@
       }
 
       h1 {
-        margin: 12px 0 8px;
+        margin: 16px 0 8px;
         font-size: clamp(28px, 4vw, 36px);
         line-height: 1.12;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .block-icon {
+        font-size: 32px;
       }
 
       p {
         margin: 0;
         color: var(--muted);
+      }
+
+      .timer {
+        margin-top: 14px;
+        padding: 14px;
+        text-align: center;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #fef3c7 0%, #fee8a0 100%);
+        border: 1px solid #fcd34d;
+      }
+
+      .timer-label {
+        font-size: 12px;
+        color: #92400e;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+      }
+
+      .timer-value {
+        margin-top: 6px;
+        font-size: 24px;
+        font-weight: 800;
+        color: #d97706;
+      }
+
+      .timer.hidden {
+        display: none;
       }
 
       .meta {
@@ -92,8 +127,14 @@
         border: 1px solid var(--line);
       }
 
+      .meta-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
       .meta p + p {
-        margin-top: 6px;
+        margin-top: 8px;
       }
 
       .meta strong,
@@ -103,6 +144,21 @@
 
       .meta span {
         word-break: break-word;
+      }
+
+      .encouragement {
+        margin-top: 14px;
+        padding: 12px;
+        border-radius: 12px;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        color: #065f46;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .encouragement.hidden {
+        display: none;
       }
 
       .tips {
@@ -175,13 +231,29 @@
           CBag Site Blocker
         </div>
       </div>
-      <h1>Acces temporairement bloque</h1>
+      <h1><span class="block-icon">🚫</span> Accès temporairement bloqué</h1>
       <p id="introText">Cette page correspond a une regle active de ta liste de blocage (groupe + horaire).</p>
+
+      <div id="timerSection" class="timer hidden">
+        <div class="timer-label">Déblocage dans</div>
+        <div class="timer-value" id="timerValue">--:--</div>
+      </div>
+
       <div class="meta">
-        <p><strong>URL</strong>: <span id="blockedUrl">inconnue</span></p>
-        <p><strong>Regle</strong>: <span id="matchedRule">inconnue</span></p>
-        <p><strong>Groupe</strong>: <span id="matchedGroup">inconnu</span></p>
-        <p><strong>Heure</strong>: <span id="blockedAt">-</span></p>
+        <div class="meta-row">
+          <div>
+            <p><strong>📍 Domaine</strong>: <span id="blockedUrl">inconnue</span></p>
+            <p><strong>📋 Groupe</strong>: <span id="matchedGroup">inconnu</span></p>
+          </div>
+          <div>
+            <p><strong>⏰ Heure</strong>: <span id="blockedAt">-</span></p>
+            <p><strong>🎯 Règle</strong>: <span id="matchedRule">inconnue</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div id="encouragementSection" class="encouragement hidden">
+        <strong>💪 Continue comme ça !</strong> Respirer et prendre du recul est une bonne décision. Utilise ce temps pour une activité plus constructive.
       </div>
       <div class="tips">
         <strong>Que faire maintenant ?</strong>
@@ -196,7 +268,7 @@
         <button class="home" id="homeBtn" type="button">Aller sur un nouvel onglet</button>
         <button class="settings" id="settingsBtn" type="button">Modifier les regles</button>
       </div>
-      <p class="footer">Le blocage se met a jour automatiquement selon tes intervalles, meme si un onglet est deja ouvert.</p>
+      <p class="footer">ℹ️ Le blocage se met à jour automatiquement selon tes horaires.</p>
     </article>
     <script src="shared.js"></script>
     <script src="blocked.js"></script>
