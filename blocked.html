@@ -236,44 +236,45 @@
           CBag Site Blocker
         </div>
       </div>
-      <h1><span class="block-icon">🚫</span> Accès temporairement bloqué</h1>
-      <p id="introText">Cette page correspond a une regle active de ta liste de blocage (groupe + horaire).</p>
+      <h1><span class="block-icon">🚫</span> <span id="blockedTitle" data-i18n="blocked.title">Accès temporairement bloqué</span></h1>
+      <p id="introText" data-i18n="blocked.introDefault">Cette page correspond a une regle active de ta liste de blocage (groupe + horaire).</p>
 
       <div id="timerSection" class="timer hidden">
-        <div class="timer-label">Déblocage dans</div>
+        <div class="timer-label" data-i18n="blocked.timerLabel">Déblocage dans</div>
         <div class="timer-value" id="timerValue">--:--</div>
       </div>
 
       <div class="meta">
         <div class="meta-row">
           <div>
-            <p><strong>📍 Domaine</strong>: <span id="blockedUrl">inconnue</span></p>
-            <p><strong>📋 Groupe</strong>: <span id="matchedGroup">inconnu</span></p>
+            <p><strong id="labelDomain" data-i18n="blocked.label.domain">📍 Domaine</strong>: <span id="blockedUrl">inconnue</span></p>
+            <p><strong id="labelGroup" data-i18n="blocked.label.group">📋 Groupe</strong>: <span id="matchedGroup">inconnu</span></p>
           </div>
           <div>
-            <p><strong>⏰ Heure</strong>: <span id="blockedAt">-</span></p>
-            <p><strong>🎯 Règle</strong>: <span id="matchedRule">inconnue</span></p>
+            <p><strong id="labelTime" data-i18n="blocked.label.time">⏰ Heure</strong>: <span id="blockedAt">-</span></p>
+            <p><strong id="labelRule" data-i18n="blocked.label.rule">🎯 Règle</strong>: <span id="matchedRule">inconnue</span></p>
           </div>
         </div>
       </div>
 
       <div id="encouragementSection" class="encouragement hidden">
-        <strong>💪 Continue comme ça !</strong> Respirer et prendre du recul est une bonne décision. Utilise ce temps pour une activité plus constructive.
+        <strong id="encouragementTitle" data-i18n="blocked.encouragement.title">💪 Continue comme ça !</strong>
+        <span id="encouragementBody" data-i18n="blocked.encouragement.body"> Respirer et prendre du recul est une bonne décision. Utilise ce temps pour une activité plus constructive.</span>
       </div>
       <div class="tips">
-        <strong>Que faire maintenant ?</strong>
+        <strong id="tipsTitle" data-i18n="blocked.tips.title">Que faire maintenant ?</strong>
         <ul>
-          <li>Retourner a la page precedente pour reprendre une navigation utile</li>
-          <li>Ouvrir un nouvel onglet avec un site non bloque</li>
-          <li>Ajuster les regles et les horaires dans la configuration</li>
+          <li data-i18n="blocked.tips.item1">Retourner a la page precedente pour reprendre une navigation utile</li>
+          <li data-i18n="blocked.tips.item2">Ouvrir un nouvel onglet avec un site non bloque</li>
+          <li data-i18n="blocked.tips.item3">Ajuster les regles et les horaires dans la configuration</li>
         </ul>
       </div>
       <div class="actions">
-        <button class="back" id="backBtn" type="button">Retour</button>
-        <button class="home" id="homeBtn" type="button">Aller sur un nouvel onglet</button>
-        <button class="settings" id="settingsBtn" type="button">Modifier les regles</button>
+        <button class="back" id="backBtn" type="button" data-i18n="blocked.button.back">Retour</button>
+        <button class="home" id="homeBtn" type="button" data-i18n="blocked.button.home">Aller sur un nouvel onglet</button>
+        <button class="settings" id="settingsBtn" type="button" data-i18n="blocked.button.settings">Modifier les regles</button>
       </div>
-      <p class="footer">ℹ️ Le blocage se met à jour automatiquement selon tes horaires.</p>
+      <p class="footer" data-i18n="blocked.footer">ℹ️ Le blocage se met à jour automatiquement selon tes horaires.</p>
     </article>
     <script src="shared.js"></script>
     <script src="blocked.js"></script>

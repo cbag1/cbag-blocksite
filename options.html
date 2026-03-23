@@ -14,40 +14,40 @@
         <div class="hero">
           <img src="logo.svg" alt="Logo CBag Site Blocker" class="hero-logo" />
           <div>
-          <h1>Configuration du blocage</h1>
-          <p class="sub">Cree des groupes de sites, definis des plages horaires, et applique un blocage automatique sans attendre un rechargement.</p>
+          <h1 data-i18n="options.title">Configuration du blocage</h1>
+          <p class="sub" data-i18n="options.subtitle">Cree des groupes de sites, definis des plages horaires, et applique un blocage automatique sans attendre un rechargement.</p>
           </div>
         </div>
         <label class="toggle">
           <input id="enabledToggle" type="checkbox" />
-          <span>Protection globale active</span>
+          <span data-i18n="options.globalProtection">Protection globale active</span>
         </label>
       </header>
 
-      <section class="stats" aria-label="Resume detaille des regles">
+      <section class="stats" aria-label="Resume detaille des regles" data-i18n-aria-label="options.statsAria">
         <article class="stat-card">
-          <span class="stat-label">Groupes</span>
+          <span class="stat-label" data-i18n="options.stats.groups">Groupes</span>
           <strong id="groupsCount" class="stat-value">0</strong>
         </article>
         <article class="stat-card">
-          <span class="stat-label">Sites</span>
+          <span class="stat-label" data-i18n="options.stats.sites">Sites</span>
           <strong id="sitesCount" class="stat-value">0</strong>
         </article>
         <article class="stat-card">
-          <span class="stat-label">Actifs</span>
+          <span class="stat-label" data-i18n="options.stats.active">Actifs</span>
           <strong id="activeGroupsCount" class="stat-value">0</strong>
         </article>
       </section>
 
       <section class="card">
         <div class="top-actions">
-          <button id="openAddModalBtn" type="button" class="add-btn">+ Ajouter un groupe de blocage</button>
+          <button id="openAddModalBtn" type="button" class="add-btn" data-i18n="options.button.addGroup">+ Ajouter un groupe de blocage</button>
         </div>
-        <p id="pageStatus" class="status">Pret.</p>
+        <p id="pageStatus" class="status" data-i18n="common.ready">Pret.</p>
       </section>
 
       <section class="card">
-        <h2>Groupes configures</h2>
+        <h2 data-i18n="options.groupsConfigured">Groupes configures</h2>
         <ul id="groupsList" class="groups"></ul>
       </section>
     </main>
@@ -57,89 +57,90 @@
       <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <header class="modal-head">
           <div>
-            <h2 id="modalTitle">Ajouter un groupe de blocage</h2>
-            <p class="hint">Choisis une categorie predefinie ou cree un groupe personnalise avec tes propres sites et horaires.</p>
+            <h2 id="modalTitle" data-i18n="options.modal.add.title">Ajouter un groupe de blocage</h2>
+            <p class="hint" data-i18n="options.modal.add.hint">Choisis une categorie predefinie ou cree un groupe personnalise avec tes propres sites et horaires.</p>
           </div>
-          <button id="closeAddModalBtn" class="icon-btn" type="button" aria-label="Fermer">x</button>
+          <button id="closeAddModalBtn" class="icon-btn" type="button" aria-label="Fermer" data-i18n-aria-label="common.close">x</button>
         </header>
 
         <div class="modal-content">
           <section class="modal-section">
-            <h3>Ajouter par categorie</h3>
+            <h3 data-i18n="options.modal.add.byCategory">Ajouter par categorie</h3>
             <div id="categoryGrid" class="category-grid">
               <button type="button" class="category-btn" data-category="social">
-                <span class="cat-title">Social</span>
-                <span class="cat-sub">Facebook, Instagram, TikTok, X...</span>
+                <span class="cat-title" data-i18n="options.category.social.title">Social</span>
+                <span class="cat-sub" data-i18n="options.category.social.sub">Facebook, Instagram, TikTok, X...</span>
               </button>
               <button type="button" class="category-btn" data-category="adult">
-                <span class="cat-title">Adulte</span>
-                <span class="cat-sub">Sites adultes frequents</span>
+                <span class="cat-title" data-i18n="options.category.adult.title">Adulte</span>
+                <span class="cat-sub" data-i18n="options.category.adult.sub">Sites adultes frequents</span>
               </button>
               <button type="button" class="category-btn" data-category="news">
-                <span class="cat-title">Actualites</span>
-                <span class="cat-sub">Presse et medias en ligne</span>
+                <span class="cat-title" data-i18n="options.category.news.title">Actualites</span>
+                <span class="cat-sub" data-i18n="options.category.news.sub">Presse et medias en ligne</span>
               </button>
             </div>
             <div id="categoryConfig" class="category-config hidden">
-              <p id="selectedCategoryLabel" class="hint">Categorie selectionnee: -</p>
+              <p id="selectedCategoryLabel" class="hint" data-i18n="options.category.selected.none">Categorie selectionnee: -</p>
               <div id="categoryIntervalRows" class="interval-rows"></div>
                 <fieldset class="weekday-fieldset">
-                  <legend>Jours de blocage</legend>
+                  <legend data-i18n="options.days.legend">Jours de blocage</legend>
                   <div id="categoryDaysPicker" class="weekday-picker">
-                    <label><input type="checkbox" value="1" checked /> Lun</label>
-                    <label><input type="checkbox" value="2" checked /> Mar</label>
-                    <label><input type="checkbox" value="3" checked /> Mer</label>
-                    <label><input type="checkbox" value="4" checked /> Jeu</label>
-                    <label><input type="checkbox" value="5" checked /> Ven</label>
-                    <label><input type="checkbox" value="6" checked /> Sam</label>
-                    <label><input type="checkbox" value="0" checked /> Dim</label>
+                    <label><input type="checkbox" value="1" checked /> <span data-i18n="weekday.mon">Lun</span></label>
+                    <label><input type="checkbox" value="2" checked /> <span data-i18n="weekday.tue">Mar</span></label>
+                    <label><input type="checkbox" value="3" checked /> <span data-i18n="weekday.wed">Mer</span></label>
+                    <label><input type="checkbox" value="4" checked /> <span data-i18n="weekday.thu">Jeu</span></label>
+                    <label><input type="checkbox" value="5" checked /> <span data-i18n="weekday.fri">Ven</span></label>
+                    <label><input type="checkbox" value="6" checked /> <span data-i18n="weekday.sat">Sam</span></label>
+                    <label><input type="checkbox" value="0" checked /> <span data-i18n="weekday.sun">Dim</span></label>
                   </div>
                 </fieldset>
               <div class="category-actions">
-                <button type="button" id="addCategoryIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
-                <button type="button" id="confirmCategoryBtn" class="add-btn">Ajouter la categorie</button>
+                <button type="button" id="addCategoryIntervalBtn" class="ghost-btn" data-i18n="options.button.addInterval">+ Ajouter un intervalle</button>
+                <button type="button" id="confirmCategoryBtn" class="add-btn" data-i18n="options.button.addCategory">Ajouter la categorie</button>
               </div>
-              <p class="hint">Sans intervalle: blocage 24h/24 pour cette categorie. Avec intervalle: activation automatique a l'heure definie.</p>
+              <p class="hint" data-i18n="options.category.help">Sans intervalle: blocage 24h/24 pour cette categorie. Avec intervalle: activation automatique a l'heure definie.</p>
             </div>
           </section>
 
           <section class="modal-section">
-            <h3>Ajouter un groupe personnalise</h3>
+            <h3 data-i18n="options.modal.add.custom">Ajouter un groupe personnalise</h3>
             <form id="groupForm" class="grid-form">
               <label>
-                Nom du groupe
-                <input id="groupNameInput" type="text" placeholder="Ex: Reseaux sociaux" required />
+                <span data-i18n="options.field.groupName">Nom du groupe</span>
+                <input id="groupNameInput" type="text" placeholder="Ex: Reseaux sociaux" data-i18n-placeholder="options.placeholder.groupName" required />
               </label>
               <label>
-                Sites (separes par virgule)
+                <span data-i18n="options.field.sites">Sites (separes par virgule)</span>
                 <input
                   id="groupSitesInput"
                   type="text"
                   placeholder="facebook.com, instagram.com, *.tiktok.com"
+                  data-i18n-placeholder="options.placeholder.sites"
                   required
                 />
               </label>
               <label>
-                Intervalles
+                <span data-i18n="options.field.intervals">Intervalles</span>
                 <div id="intervalRows" class="interval-rows"></div>
               </label>
               <fieldset class="weekday-fieldset">
-                <legend>Jours de blocage</legend>
+                <legend data-i18n="options.days.legend">Jours de blocage</legend>
                 <div id="addDaysPicker" class="weekday-picker">
-                  <label><input type="checkbox" value="1" checked /> Lun</label>
-                  <label><input type="checkbox" value="2" checked /> Mar</label>
-                  <label><input type="checkbox" value="3" checked /> Mer</label>
-                  <label><input type="checkbox" value="4" checked /> Jeu</label>
-                  <label><input type="checkbox" value="5" checked /> Ven</label>
-                  <label><input type="checkbox" value="6" checked /> Sam</label>
-                  <label><input type="checkbox" value="0" checked /> Dim</label>
+                  <label><input type="checkbox" value="1" checked /> <span data-i18n="weekday.mon">Lun</span></label>
+                  <label><input type="checkbox" value="2" checked /> <span data-i18n="weekday.tue">Mar</span></label>
+                  <label><input type="checkbox" value="3" checked /> <span data-i18n="weekday.wed">Mer</span></label>
+                  <label><input type="checkbox" value="4" checked /> <span data-i18n="weekday.thu">Jeu</span></label>
+                  <label><input type="checkbox" value="5" checked /> <span data-i18n="weekday.fri">Ven</span></label>
+                  <label><input type="checkbox" value="6" checked /> <span data-i18n="weekday.sat">Sam</span></label>
+                  <label><input type="checkbox" value="0" checked /> <span data-i18n="weekday.sun">Dim</span></label>
                 </div>
               </fieldset>
-              <button type="button" id="addIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
-              <p class="hint">Sans intervalle: blocage 24h/24 pour ce groupe. Les nouveaux horaires sont appliques automatiquement toutes les minutes.</p>
+              <button type="button" id="addIntervalBtn" class="ghost-btn" data-i18n="options.button.addInterval">+ Ajouter un intervalle</button>
+              <p class="hint" data-i18n="options.group.help">Sans intervalle: blocage 24h/24 pour ce groupe. Les nouveaux horaires sont appliques automatiquement toutes les minutes.</p>
               <div class="modal-actions">
-                <button type="button" id="cancelAddModalBtn" class="ghost-btn">Annuler</button>
-                <button type="submit" class="add-btn">Ajouter a la liste de blocage</button>
+                <button type="button" id="cancelAddModalBtn" class="ghost-btn" data-i18n="common.cancel">Annuler</button>
+                <button type="submit" class="add-btn" data-i18n="options.button.addToList">Ajouter a la liste de blocage</button>
               </div>
             </form>
           </section>
@@ -152,10 +153,10 @@
       <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
         <header class="modal-head">
           <div>
-            <h2 id="editModalTitle">Modifier un groupe</h2>
-            <p class="hint">Mets a jour les sites et les intervalles de ce groupe. Les changements sont pris en compte immediatement.</p>
+            <h2 id="editModalTitle" data-i18n="options.modal.edit.title">Modifier un groupe</h2>
+            <p class="hint" data-i18n="options.modal.edit.hint">Mets a jour les sites et les intervalles de ce groupe. Les changements sont pris en compte immediatement.</p>
           </div>
-          <button id="closeEditModalBtn" class="icon-btn" type="button" aria-label="Fermer">x</button>
+          <button id="closeEditModalBtn" class="icon-btn" type="button" aria-label="Fermer" data-i18n-aria-label="common.close">x</button>
         </header>
 
         <div class="modal-content">
@@ -163,34 +164,34 @@
             <form id="editGroupForm" class="grid-form">
               <input id="editingGroupId" type="hidden" />
               <label>
-                Nom du groupe
+                <span data-i18n="options.field.groupName">Nom du groupe</span>
                 <input id="editGroupNameInput" type="text" required />
               </label>
               <label>
-                Sites (separes par virgule)
+                <span data-i18n="options.field.sites">Sites (separes par virgule)</span>
                 <input id="editGroupSitesInput" type="text" required />
               </label>
               <label>
-                Intervalles
+                <span data-i18n="options.field.intervals">Intervalles</span>
                 <div id="editIntervalRows" class="interval-rows"></div>
               </label>
               <fieldset class="weekday-fieldset">
-                <legend>Jours de blocage</legend>
+                <legend data-i18n="options.days.legend">Jours de blocage</legend>
                 <div id="editDaysPicker" class="weekday-picker">
-                  <label><input type="checkbox" value="1" checked /> Lun</label>
-                  <label><input type="checkbox" value="2" checked /> Mar</label>
-                  <label><input type="checkbox" value="3" checked /> Mer</label>
-                  <label><input type="checkbox" value="4" checked /> Jeu</label>
-                  <label><input type="checkbox" value="5" checked /> Ven</label>
-                  <label><input type="checkbox" value="6" checked /> Sam</label>
-                  <label><input type="checkbox" value="0" checked /> Dim</label>
+                  <label><input type="checkbox" value="1" checked /> <span data-i18n="weekday.mon">Lun</span></label>
+                  <label><input type="checkbox" value="2" checked /> <span data-i18n="weekday.tue">Mar</span></label>
+                  <label><input type="checkbox" value="3" checked /> <span data-i18n="weekday.wed">Mer</span></label>
+                  <label><input type="checkbox" value="4" checked /> <span data-i18n="weekday.thu">Jeu</span></label>
+                  <label><input type="checkbox" value="5" checked /> <span data-i18n="weekday.fri">Ven</span></label>
+                  <label><input type="checkbox" value="6" checked /> <span data-i18n="weekday.sat">Sam</span></label>
+                  <label><input type="checkbox" value="0" checked /> <span data-i18n="weekday.sun">Dim</span></label>
                 </div>
               </fieldset>
-              <button type="button" id="addEditIntervalBtn" class="ghost-btn">+ Ajouter un intervalle</button>
-              <p class="hint">Sans intervalle: blocage 24h/24 pour ce groupe. Avec intervalle: blocage actif uniquement pendant les plages configurees.</p>
+              <button type="button" id="addEditIntervalBtn" class="ghost-btn" data-i18n="options.button.addInterval">+ Ajouter un intervalle</button>
+              <p class="hint" data-i18n="options.edit.help">Sans intervalle: blocage 24h/24 pour ce groupe. Avec intervalle: blocage actif uniquement pendant les plages configurees.</p>
               <div class="modal-actions">
-                <button type="button" id="cancelEditModalBtn" class="ghost-btn">Annuler</button>
-                <button type="submit" class="add-btn">Enregistrer</button>
+                <button type="button" id="cancelEditModalBtn" class="ghost-btn" data-i18n="common.cancel">Annuler</button>
+                <button type="submit" class="add-btn" data-i18n="common.save">Enregistrer</button>
               </div>
             </form>
           </section>

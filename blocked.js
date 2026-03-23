@@ -1,17 +1,70 @@
 const params = new URLSearchParams(window.location.search);
 
-const blockedUrl = params.get("blocked") || "inconnue";
-const matchedRule = params.get("rule") || "inconnue";
-const matchedGroup = params.get("group") || "inconnu";
+const { tryGetHostname, createI18n, applyI18nToDocument } = window.BlocksiteShared;
+
+const messages = {
+  fr: {
+    "blocked.documentTitle": "Site bloque",
+    "blocked.title": "Acces temporairement bloque",
+    "blocked.introDefault": "Cette page correspond a une regle active de ta liste de blocage (groupe + horaire).",
+    "blocked.introHost": "L'acces a {{host}} est actuellement bloque.",
+    "blocked.timerLabel": "Deblocage dans",
+    "blocked.label.domain": "📍 Domaine",
+    "blocked.label.group": "📋 Groupe",
+    "blocked.label.time": "⏰ Heure",
+    "blocked.label.rule": "🎯 Regle",
+    "blocked.encouragement.title": "💪 Continue comme ca !",
+    "blocked.encouragement.body": " Respirer et prendre du recul est une bonne decision. Utilise ce temps pour une activite plus constructive.",
+    "blocked.tips.title": "Que faire maintenant ?",
+    "blocked.tips.item1": "Retourner a la page precedente pour reprendre une navigation utile",
+    "blocked.tips.item2": "Ouvrir un nouvel onglet avec un site non bloque",
+    "blocked.tips.item3": "Ajuster les regles et les horaires dans la configuration",
+    "blocked.button.back": "Retour",
+    "blocked.button.home": "Aller sur un nouvel onglet",
+    "blocked.button.settings": "Modifier les regles",
+    "blocked.footer": "ℹ️ Le blocage se met a jour automatiquement selon tes horaires.",
+    "blocked.unknown.f": "inconnue",
+    "blocked.unknown.m": "inconnu"
+  },
+  en: {
+    "blocked.documentTitle": "Blocked site",
+    "blocked.title": "Access temporarily blocked",
+    "blocked.introDefault": "This page matches an active blocking rule from your list (group + schedule).",
+    "blocked.introHost": "Access to {{host}} is currently blocked.",
+    "blocked.timerLabel": "Unblock in",
+    "blocked.label.domain": "📍 Domain",
+    "blocked.label.group": "📋 Group",
+    "blocked.label.time": "⏰ Time",
+    "blocked.label.rule": "🎯 Rule",
+    "blocked.encouragement.title": "💪 Keep it up!",
+    "blocked.encouragement.body": " Taking a breath and stepping back is a good decision. Use this time for a more constructive activity.",
+    "blocked.tips.title": "What can you do now?",
+    "blocked.tips.item1": "Go back to the previous page to resume useful browsing",
+    "blocked.tips.item2": "Open a new tab with an unblocked site",
+    "blocked.tips.item3": "Adjust rules and schedules in settings",
+    "blocked.button.back": "Go back",
+    "blocked.button.home": "Open a new tab",
+    "blocked.button.settings": "Edit rules",
+    "blocked.footer": "ℹ️ Blocking updates automatically according to your schedule.",
+    "blocked.unknown.f": "unknown",
+    "blocked.unknown.m": "unknown"
+  }
+};
+
+const i18n = createI18n(messages, { fallbackLocale: "fr", supportedLocales: ["fr", "en"] });
+const t = i18n.t;
+
+document.documentElement.lang = i18n.locale;
+document.title = t("blocked.documentTitle");
+applyI18nToDocument(t);
+
+const blockedUrl = params.get("blocked") || t("blocked.unknown.f");
+const matchedRule = params.get("rule") || t("blocked.unknown.f");
+const matchedGroup = params.get("group") || t("blocked.unknown.m");
 const intervalsParam = params.get("intervals") || ""; // Format: "09:00-17:00,20:00-22:00"
 
-const { tryGetHostname, normalizeInterval, isNowInInterval } = window.BlocksiteShared;
-
 const blockedHost = tryGetHostname(blockedUrl);
-const nowText = new Intl.DateTimeFormat("fr-FR", {
-  dateStyle: "short",
-  timeStyle: "short"
-}).format(new Date());
+const nowText = i18n.formatDateTime(new Date());
 
 document.getElementById("blockedUrl").textContent = blockedUrl;
 document.getElementById("matchedRule").textContent = matchedRule;
@@ -19,7 +72,7 @@ document.getElementById("matchedGroup").textContent = matchedGroup;
 document.getElementById("blockedAt").textContent = nowText;
 
 if (blockedHost) {
-  document.getElementById("introText").textContent = `L'accès à ${blockedHost} est actuellement bloqué.`;
+  document.getElementById("introText").textContent = t("blocked.introHost", { host: blockedHost });
 }
 
 // Afficher le message de motivation

@@ -1,17 +1,179 @@
 const ENABLED_KEY = "enabled";
 const GROUPS_KEY = "siteGroups";
 const WEEKDAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
-const WEEKDAY_LABELS = {
-  0: "Dim",
-  1: "Lun",
-  2: "Mar",
-  3: "Mer",
-  4: "Jeu",
-  5: "Ven",
-  6: "Sam"
+const WEEKDAY_LABEL_KEYS = {
+  0: "weekday.sun",
+  1: "weekday.mon",
+  2: "weekday.tue",
+  3: "weekday.wed",
+  4: "weekday.thu",
+  5: "weekday.fri",
+  6: "weekday.sat"
 };
 
-const { createId, normalizePattern, normalizeInterval, normalizeDays, sanitizeGroups, splitCsv } = window.BlocksiteShared;
+const { createId, normalizePattern, normalizeInterval, normalizeDays, sanitizeGroups, splitCsv, createI18n, applyI18nToDocument } = window.BlocksiteShared;
+
+const messages = {
+  fr: {
+    "options.documentTitle": "Configuration CBag Site Blocker",
+    "common.ready": "Pret.",
+    "common.cancel": "Annuler",
+    "common.close": "Fermer",
+    "common.save": "Enregistrer",
+    "weekday.mon": "Lun",
+    "weekday.tue": "Mar",
+    "weekday.wed": "Mer",
+    "weekday.thu": "Jeu",
+    "weekday.fri": "Ven",
+    "weekday.sat": "Sam",
+    "weekday.sun": "Dim",
+    "options.title": "Configuration du blocage",
+    "options.subtitle": "Cree des groupes de sites, definis des plages horaires, et applique un blocage automatique sans attendre un rechargement.",
+    "options.globalProtection": "Protection globale active",
+    "options.statsAria": "Resume detaille des regles",
+    "options.stats.groups": "Groupes",
+    "options.stats.sites": "Sites",
+    "options.stats.active": "Actifs",
+    "options.button.addGroup": "+ Ajouter un groupe de blocage",
+    "options.groupsConfigured": "Groupes configures",
+    "options.modal.add.title": "Ajouter un groupe de blocage",
+    "options.modal.add.hint": "Choisis une categorie predefinie ou cree un groupe personnalise avec tes propres sites et horaires.",
+    "options.modal.add.byCategory": "Ajouter par categorie",
+    "options.category.social.title": "Social",
+    "options.category.social.sub": "Facebook, Instagram, TikTok, X...",
+    "options.category.adult.title": "Adulte",
+    "options.category.adult.sub": "Sites adultes frequents",
+    "options.category.news.title": "Actualites",
+    "options.category.news.sub": "Presse et medias en ligne",
+    "options.category.selected.none": "Categorie selectionnee: -",
+    "options.category.selected": "Categorie selectionnee: {{label}}",
+    "options.days.legend": "Jours de blocage",
+    "options.button.addInterval": "+ Ajouter un intervalle",
+    "options.button.addCategory": "Ajouter la categorie",
+    "options.category.help": "Sans intervalle: blocage 24h/24 pour cette categorie. Avec intervalle: activation automatique a l'heure definie.",
+    "options.modal.add.custom": "Ajouter un groupe personnalise",
+    "options.field.groupName": "Nom du groupe",
+    "options.field.sites": "Sites (separes par virgule)",
+    "options.field.intervals": "Intervalles",
+    "options.placeholder.groupName": "Ex: Reseaux sociaux",
+    "options.placeholder.sites": "facebook.com, instagram.com, *.tiktok.com",
+    "options.group.help": "Sans intervalle: blocage 24h/24 pour ce groupe. Les nouveaux horaires sont appliques automatiquement toutes les minutes.",
+    "options.button.addToList": "Ajouter a la liste de blocage",
+    "options.modal.edit.title": "Modifier un groupe",
+    "options.modal.edit.hint": "Mets a jour les sites et les intervalles de ce groupe. Les changements sont pris en compte immediatement.",
+    "options.edit.help": "Sans intervalle: blocage 24h/24 pour ce groupe. Avec intervalle: blocage actif uniquement pendant les plages configurees.",
+    "options.interval.to": "a",
+    "options.interval.remove": "Retirer",
+    "options.days.all": "Tous les jours",
+    "options.group.active": "Actif",
+    "options.group.edit": "Modifier",
+    "options.group.remove": "Supprimer",
+    "options.empty": "Aucun groupe configure.",
+    "options.category.defaultName": "Categorie",
+    "options.status.invalidInterval": "Au moins un intervalle est invalide. Utilise des heures valides.",
+    "options.status.selectDay": "Selectionne au moins un jour de blocage.",
+    "options.status.verifyNameSite": "Verifie le nom du groupe et au moins un site valide.",
+    "options.status.groupAdded": "Groupe ajoute a la liste de blocage.",
+    "options.status.invalidEditInterval": "Au moins un intervalle est invalide dans la modification.",
+    "options.status.selectDayForGroup": "Selectionne au moins un jour pour ce groupe.",
+    "options.status.unableEditGroup": "Impossible de modifier ce groupe.",
+    "options.status.groupUpdated": "Groupe modifie avec succes.",
+    "options.status.setupCategory": "Definis les intervalles puis valide la categorie {{label}}.",
+    "options.status.selectCategoryFirst": "Selectionne d'abord une categorie.",
+    "options.status.invalidCategoryInterval": "Au moins un intervalle de categorie est invalide.",
+    "options.status.selectDayForCategory": "Selectionne au moins un jour pour cette categorie.",
+    "options.status.unableAddCategory": "Impossible d'ajouter cette categorie.",
+    "options.status.categoryAdded": "Categorie ajoutee: {{label}}",
+    "options.status.groupNotFound": "Groupe introuvable.",
+    "options.confirm.deleteGroup": "Supprimer ce groupe de blocage ?",
+    "options.status.groupDeleted": "Groupe supprime.",
+    "options.status.groupEnabled": "Groupe active.",
+    "options.status.groupDisabled": "Groupe desactive."
+  },
+  en: {
+    "options.documentTitle": "CBag Site Blocker settings",
+    "common.ready": "Ready.",
+    "common.cancel": "Cancel",
+    "common.close": "Close",
+    "common.save": "Save",
+    "weekday.mon": "Mon",
+    "weekday.tue": "Tue",
+    "weekday.wed": "Wed",
+    "weekday.thu": "Thu",
+    "weekday.fri": "Fri",
+    "weekday.sat": "Sat",
+    "weekday.sun": "Sun",
+    "options.title": "Blocking settings",
+    "options.subtitle": "Create site groups, define time ranges, and apply automatic blocking without waiting for a reload.",
+    "options.globalProtection": "Global protection enabled",
+    "options.statsAria": "Detailed rules summary",
+    "options.stats.groups": "Groups",
+    "options.stats.sites": "Sites",
+    "options.stats.active": "Active",
+    "options.button.addGroup": "+ Add a blocking group",
+    "options.groupsConfigured": "Configured groups",
+    "options.modal.add.title": "Add a blocking group",
+    "options.modal.add.hint": "Choose a predefined category or create a custom group with your own sites and schedules.",
+    "options.modal.add.byCategory": "Add by category",
+    "options.category.social.title": "Social",
+    "options.category.social.sub": "Facebook, Instagram, TikTok, X...",
+    "options.category.adult.title": "Adult",
+    "options.category.adult.sub": "Common adult sites",
+    "options.category.news.title": "News",
+    "options.category.news.sub": "Online press and media",
+    "options.category.selected.none": "Selected category: -",
+    "options.category.selected": "Selected category: {{label}}",
+    "options.days.legend": "Blocking days",
+    "options.button.addInterval": "+ Add interval",
+    "options.button.addCategory": "Add category",
+    "options.category.help": "No interval: 24/7 blocking for this category. With interval: automatic activation at the defined time.",
+    "options.modal.add.custom": "Add a custom group",
+    "options.field.groupName": "Group name",
+    "options.field.sites": "Sites (comma-separated)",
+    "options.field.intervals": "Intervals",
+    "options.placeholder.groupName": "E.g. Social networks",
+    "options.placeholder.sites": "facebook.com, instagram.com, *.tiktok.com",
+    "options.group.help": "No interval: 24/7 blocking for this group. New schedules are applied automatically every minute.",
+    "options.button.addToList": "Add to block list",
+    "options.modal.edit.title": "Edit group",
+    "options.modal.edit.hint": "Update this group's sites and intervals. Changes are applied immediately.",
+    "options.edit.help": "No interval: 24/7 blocking for this group. With interval: blocking active only during configured ranges.",
+    "options.interval.to": "to",
+    "options.interval.remove": "Remove",
+    "options.days.all": "Every day",
+    "options.group.active": "Active",
+    "options.group.edit": "Edit",
+    "options.group.remove": "Delete",
+    "options.empty": "No configured group.",
+    "options.category.defaultName": "Category",
+    "options.status.invalidInterval": "At least one interval is invalid. Use valid times.",
+    "options.status.selectDay": "Select at least one blocking day.",
+    "options.status.verifyNameSite": "Check the group name and at least one valid site.",
+    "options.status.groupAdded": "Group added to block list.",
+    "options.status.invalidEditInterval": "At least one interval is invalid in the edit form.",
+    "options.status.selectDayForGroup": "Select at least one day for this group.",
+    "options.status.unableEditGroup": "Unable to edit this group.",
+    "options.status.groupUpdated": "Group updated successfully.",
+    "options.status.setupCategory": "Define intervals then confirm category {{label}}.",
+    "options.status.selectCategoryFirst": "Select a category first.",
+    "options.status.invalidCategoryInterval": "At least one category interval is invalid.",
+    "options.status.selectDayForCategory": "Select at least one day for this category.",
+    "options.status.unableAddCategory": "Unable to add this category.",
+    "options.status.categoryAdded": "Category added: {{label}}",
+    "options.status.groupNotFound": "Group not found.",
+    "options.confirm.deleteGroup": "Delete this blocking group?",
+    "options.status.groupDeleted": "Group deleted.",
+    "options.status.groupEnabled": "Group enabled.",
+    "options.status.groupDisabled": "Group disabled."
+  }
+};
+
+const i18n = createI18n(messages, { fallbackLocale: "fr", supportedLocales: ["fr", "en"] });
+const t = i18n.t;
+
+document.documentElement.lang = i18n.locale;
+document.title = t("options.documentTitle");
+applyI18nToDocument(t);
 
 const enabledToggle = document.getElementById("enabledToggle");
 const groupsList = document.getElementById("groupsList");
@@ -80,7 +242,7 @@ function createIntervalRow(container, startValue = "", endValue = "") {
 
   const sep = document.createElement("span");
   sep.className = "interval-sep";
-  sep.textContent = "a";
+  sep.textContent = t("options.interval.to");
 
   const endInput = document.createElement("input");
   endInput.type = "time";
@@ -90,7 +252,7 @@ function createIntervalRow(container, startValue = "", endValue = "") {
   const removeButton = document.createElement("button");
   removeButton.type = "button";
   removeButton.className = "remove-interval-btn";
-  removeButton.textContent = "Retirer";
+  removeButton.textContent = t("options.interval.remove");
 
   removeButton.addEventListener("click", () => {
     row.remove();
@@ -186,10 +348,10 @@ function setSelectedDays(container, days) {
 function formatDays(days) {
   const normalized = normalizeDays(days);
   if (normalized.length === 0 || normalized.length === 7) {
-    return ["Tous les jours"];
+    return [t("options.days.all")];
   }
 
-  return normalized.map((day) => WEEKDAY_LABELS[day] || String(day));
+  return normalized.map((day) => t(WEEKDAY_LABEL_KEYS[day] || ""));
 }
 
 function isModalOpen() {
@@ -209,7 +371,7 @@ function openAddModal() {
 
   selectedCategoryKey = "";
   if (categoryConfig) categoryConfig.classList.add("hidden");
-  if (selectedCategoryLabel) selectedCategoryLabel.textContent = "Categorie selectionnee: -";
+  if (selectedCategoryLabel) selectedCategoryLabel.textContent = t("options.category.selected.none");
   resetIntervalRows(categoryIntervalRows);
   setSelectedDays(categoryDaysPicker, WEEKDAY_ORDER);
   setSelectedDays(addDaysPicker, WEEKDAY_ORDER);
@@ -275,7 +437,7 @@ function renderGroups(groups) {
   if (!groups.length) {
     const empty = document.createElement("li");
     empty.className = "empty";
-    empty.textContent = "Aucun groupe configure.";
+    empty.textContent = t("options.empty");
     groupsList.appendChild(empty);
     return;
   }
@@ -299,7 +461,7 @@ function renderGroups(groups) {
     groupToggle.dataset.action = "toggle";
 
     const toggleText = document.createElement("span");
-    toggleText.textContent = "Actif";
+    toggleText.textContent = t("options.group.active");
     toggleLabel.append(groupToggle, toggleText);
 
     head.append(title, toggleLabel);
@@ -346,14 +508,14 @@ function renderGroups(groups) {
     editButton.className = "edit-btn";
     editButton.dataset.groupId = group.id;
     editButton.dataset.action = "edit";
-    editButton.textContent = "Modifier";
+    editButton.textContent = t("options.group.edit");
 
     const removeButton = document.createElement("button");
     removeButton.type = "button";
     removeButton.className = "danger";
     removeButton.dataset.groupId = group.id;
     removeButton.dataset.action = "remove";
-    removeButton.textContent = "Supprimer";
+    removeButton.textContent = t("options.group.remove");
 
     actions.append(editButton, removeButton);
 
@@ -503,25 +665,25 @@ groupForm?.addEventListener("submit", async (event) => {
   const { intervals, hasInvalid } = collectIntervalsFromRows(intervalRows);
   const days = collectSelectedDays(addDaysPicker);
   if (hasInvalid) {
-    setStatus("Au moins un intervalle est invalide. Utilise des heures valides.", "error");
+    setStatus(t("options.status.invalidInterval"), "error");
     return;
   }
 
   if (days.length === 0) {
-    setStatus("Selectionne au moins un jour de blocage.", "error");
+    setStatus(t("options.status.selectDay"), "error");
     return;
   }
 
   const created = await addGroup(groupNameInput.value, groupSitesInput.value, intervals, days);
   if (!created) {
-    setStatus("Verifie le nom du groupe et au moins un site valide.", "error");
+    setStatus(t("options.status.verifyNameSite"), "error");
     return;
   }
 
   groupNameInput.value = "";
   groupSitesInput.value = "";
   resetIntervalRows(intervalRows);
-  setStatus("Groupe ajoute a la liste de blocage.", "ok");
+  setStatus(t("options.status.groupAdded"), "ok");
   closeAddModal();
   await loadState();
 });
@@ -532,22 +694,22 @@ editGroupForm?.addEventListener("submit", async (event) => {
   const { intervals, hasInvalid } = collectIntervalsFromRows(editIntervalRows);
   const days = collectSelectedDays(editDaysPicker);
   if (hasInvalid) {
-    setStatus("Au moins un intervalle est invalide dans la modification.", "error");
+    setStatus(t("options.status.invalidEditInterval"), "error");
     return;
   }
 
   if (days.length === 0) {
-    setStatus("Selectionne au moins un jour pour ce groupe.", "error");
+    setStatus(t("options.status.selectDayForGroup"), "error");
     return;
   }
 
   const updated = await updateGroup(editingGroupId.value, editGroupNameInput.value, editGroupSitesInput.value, intervals, days);
   if (!updated) {
-    setStatus("Impossible de modifier ce groupe.", "error");
+    setStatus(t("options.status.unableEditGroup"), "error");
     return;
   }
 
-  setStatus("Groupe modifie avec succes.", "ok");
+  setStatus(t("options.status.groupUpdated"), "ok");
   closeEditModal();
   await loadState();
 });
@@ -579,11 +741,11 @@ categoryGrid?.addEventListener("click", (event) => {
   if (categoryConfig) categoryConfig.classList.remove("hidden");
   resetIntervalRows(categoryIntervalRows);
 
-  const label = CATEGORY_PRESETS[categoryKey]?.name || "Categorie";
+  const label = CATEGORY_PRESETS[categoryKey]?.name || t("options.category.defaultName");
   if (selectedCategoryLabel) {
-    selectedCategoryLabel.textContent = `Categorie selectionnee: ${label}`;
+    selectedCategoryLabel.textContent = t("options.category.selected", { label });
   }
-  setStatus(`Definis les intervalles puis valide la categorie ${label}.`);
+  setStatus(t("options.status.setupCategory", { label }));
 });
 
 addCategoryIntervalBtn?.addEventListener("click", () => {
@@ -592,30 +754,30 @@ addCategoryIntervalBtn?.addEventListener("click", () => {
 
 confirmCategoryBtn?.addEventListener("click", async () => {
   if (!selectedCategoryKey) {
-    setStatus("Selectionne d'abord une categorie.", "error");
+    setStatus(t("options.status.selectCategoryFirst"), "error");
     return;
   }
 
   const { intervals, hasInvalid } = collectIntervalsFromRows(categoryIntervalRows);
   const days = collectSelectedDays(categoryDaysPicker);
   if (hasInvalid) {
-    setStatus("Au moins un intervalle de categorie est invalide.", "error");
+    setStatus(t("options.status.invalidCategoryInterval"), "error");
     return;
   }
 
   if (days.length === 0) {
-    setStatus("Selectionne au moins un jour pour cette categorie.", "error");
+    setStatus(t("options.status.selectDayForCategory"), "error");
     return;
   }
 
   const created = await addPresetCategory(selectedCategoryKey, intervals, days);
   if (!created) {
-    setStatus("Impossible d'ajouter cette categorie.", "error");
+    setStatus(t("options.status.unableAddCategory"), "error");
     return;
   }
 
-  const label = CATEGORY_PRESETS[selectedCategoryKey]?.name || "Categorie";
-  setStatus(`Categorie ajoutee: ${label}`, "ok");
+  const label = CATEGORY_PRESETS[selectedCategoryKey]?.name || t("options.category.defaultName");
+  setStatus(t("options.status.categoryAdded", { label }), "ok");
   closeAddModal();
   await loadState();
 });
@@ -694,7 +856,7 @@ groupsList?.addEventListener("click", async (event) => {
     const groups = sanitizeGroups(data[GROUPS_KEY]);
     const group = groups.find((item) => item.id === groupId);
     if (!group) {
-      setStatus("Groupe introuvable.", "error");
+      setStatus(t("options.status.groupNotFound"), "error");
       return;
     }
 
@@ -703,11 +865,11 @@ groupsList?.addEventListener("click", async (event) => {
   }
 
   if (action === "remove") {
-    const confirmed = window.confirm("Supprimer ce groupe de blocage ?");
+    const confirmed = window.confirm(t("options.confirm.deleteGroup"));
     if (!confirmed) return;
 
     await removeGroup(groupId);
-    setStatus("Groupe supprime.", "ok");
+    setStatus(t("options.status.groupDeleted"), "ok");
     await loadState();
   }
 });
@@ -721,7 +883,7 @@ groupsList?.addEventListener("change", async (event) => {
   if (action !== "toggle" || !groupId) return;
 
   await toggleGroup(groupId, target.checked);
-  setStatus(target.checked ? "Groupe active." : "Groupe desactive.");
+  setStatus(target.checked ? t("options.status.groupEnabled") : t("options.status.groupDisabled"));
 });
 
 chrome.storage.onChanged.addListener((changes, area) => {
