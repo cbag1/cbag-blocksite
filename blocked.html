@@ -8,14 +8,14 @@
     <link rel="icon" type="image/svg+xml" href="logo.svg" />
     <style>
       :root {
-        --bg: #f4f6fa;
-        --card: #ffffff;
-        --line: #e3e8f0;
-        --text: #0f172a;
-        --muted: #64748b;
-        --warn: #ea580c;
-        --ok: #10b981;
-        --accent: #2563eb;
+        --bg: #060f24;
+        --card: #0d1b3a;
+        --line: #1f3d73;
+        --text: #e9f1ff;
+        --muted: #9db2d8;
+        --warn: #ff9f5b;
+        --ok: #2fe3b3;
+        --accent: #2f7cf0;
       }
 
       * {
@@ -27,7 +27,10 @@
         min-height: 100vh;
         display: grid;
         place-items: center;
-        background: var(--bg);
+        background:
+          radial-gradient(1100px 700px at 7% -4%, rgba(66, 122, 255, 0.16), transparent 58%),
+          radial-gradient(900px 520px at 108% 6%, rgba(32, 212, 255, 0.1), transparent 60%),
+          linear-gradient(180deg, #08132c 0%, var(--bg) 78%);
         color: var(--text);
         font: 16px/1.5 "Manrope", "IBM Plex Sans", "Segoe UI", sans-serif;
         padding: 20px;
@@ -37,9 +40,11 @@
         width: min(760px, 100%);
         background: var(--card);
         border: 1px solid var(--line);
-        border-radius: 16px;
+        border-radius: 20px;
         padding: 22px;
-        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        box-shadow:
+          0 30px 80px rgba(2, 6, 23, 0.45),
+          inset 0 1px 0 rgba(255, 255, 255, 0.04);
       }
 
       .badge {
@@ -48,8 +53,8 @@
         gap: 8px;
         border: 1px solid var(--line);
         border-radius: 999px;
-        background: #f8fafc;
-        color: var(--muted);
+        background: rgba(5, 13, 32, 0.45);
+        color: #b8cbef;
         padding: 6px 10px;
         font-size: 12px;
       }
@@ -96,8 +101,8 @@
         padding: 14px;
         text-align: center;
         border-radius: 12px;
-        background: linear-gradient(135deg, #fef3c7 0%, #fee8a0 100%);
-        border: 1px solid #fcd34d;
+        background: linear-gradient(135deg, #ffe8b8 0%, #ffd684 100%);
+        border: 1px solid #efb75f;
       }
 
       .timer-label {
@@ -123,7 +128,7 @@
         margin-top: 16px;
         padding: 14px;
         border-radius: 12px;
-        background: #f8fafc;
+        background: #081731;
         border: 1px solid var(--line);
       }
 
@@ -150,9 +155,9 @@
         margin-top: 14px;
         padding: 12px;
         border-radius: 12px;
-        background: #ecfdf5;
-        border: 1px solid #a7f3d0;
-        color: #065f46;
+        background: rgba(47, 227, 179, 0.12);
+        border: 1px solid rgba(47, 227, 179, 0.4);
+        color: #b6ffe8;
         font-size: 14px;
         font-weight: 500;
       }
@@ -165,8 +170,8 @@
         margin-top: 14px;
         padding: 12px;
         border-radius: 12px;
-        background: #ffffff;
-        border: 1px dashed #d5deea;
+        background: #0a1935;
+        border: 1px dashed #28497f;
       }
 
       .tips ul {
@@ -196,17 +201,17 @@
       }
 
       button:hover {
-        filter: brightness(0.97);
+        filter: brightness(1.04);
       }
 
       .back {
-        background: #10b981;
-        color: #062018;
+        background: #2ed9ad;
+        color: #02251c;
       }
 
       .home {
-        background: #fff;
-        color: var(--text);
+        background: #0e2144;
+        color: #d8e7ff;
         border: 1px solid var(--line);
       }
 
@@ -217,7 +222,7 @@
 
       .footer {
         margin-top: 14px;
-        color: #7a889c;
+        color: #8da6d0;
         font-size: 12px;
       }
     </style>
