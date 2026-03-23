@@ -28,11 +28,13 @@ if (encouragementSection) {
   encouragementSection.classList.remove("hidden");
 }
 
-// Fonction pour formater les minutes en HH:MM
-function formatTime(minutes) {
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+// Fonction pour formater les secondes en HH:MM:SS
+function formatTime(totalSeconds) {
+  const safeSeconds = Math.max(0, Math.floor(totalSeconds));
+  const hours = Math.floor(safeSeconds / 3600);
+  const mins = Math.floor((safeSeconds % 3600) / 60);
+  const secs = safeSeconds % 60;
+  return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
 }
 
 // Fonction pour calculer le temps restant avant la fin du blocage
@@ -41,8 +43,7 @@ function calculateTimeUntilUnblock() {
 
   const intervals = intervalsParam.split(",").filter(Boolean);
   const now = new Date();
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
-  const currentDay = now.getDay();
+  const currentSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 
   // Chercher l'intervalle actif et son temps de fin
   for (const interval of intervals) {
@@ -51,34 +52,34 @@ function calculateTimeUntilUnblock() {
 
     const [startHour, startMin] = start.split(":").map(Number);
     const [endHour, endMin] = end.split(":").map(Number);
-    const startMinutes = startHour * 60 + startMin;
-    const endMinutes = endHour * 60 + endMin;
+    const startSeconds = startHour * 3600 + startMin * 60;
+    const endSeconds = endHour * 3600 + endMin * 60;
 
     let isActive = false;
-    let minutesUntilEnd = 0;
+    let secondsUntilEnd = 0;
 
-    if (startMinutes < endMinutes) {
+    if (startSeconds < endSeconds) {
       // Intervalle normal (ex: 09:00-17:00)
-      if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
+      if (currentSeconds >= startSeconds && currentSeconds < endSeconds) {
         isActive = true;
-        minutesUntilEnd = endMinutes - currentMinutes;
+        secondsUntilEnd = endSeconds - currentSeconds;
       }
     } else {
       // Intervalle qui traverse minuit (ex: 20:00-06:00)
-      if (currentMinutes >= startMinutes || currentMinutes < endMinutes) {
+      if (currentSeconds >= startSeconds || currentSeconds < endSeconds) {
         isActive = true;
-        if (currentMinutes >= startMinutes) {
+        if (currentSeconds >= startSeconds) {
           // Avant minuit
-          minutesUntilEnd = (24 * 60) - currentMinutes + endMinutes;
+          secondsUntilEnd = (24 * 3600) - currentSeconds + endSeconds;
         } else {
           // Après minuit
-          minutesUntilEnd = endMinutes - currentMinutes;
+          secondsUntilEnd = endSeconds - currentSeconds;
         }
       }
     }
 
-    if (isActive && minutesUntilEnd > 0) {
-      return minutesUntilEnd;
+    if (isActive && secondsUntilEnd > 0) {
+      return secondsUntilEnd;
     }
   }
 
@@ -92,19 +93,19 @@ function updateTimer() {
 
   if (!timerSection || !timerValue) return;
 
-  const minutesLeft = calculateTimeUntilUnblock();
+  const secondsLeft = calculateTimeUntilUnblock();
 
-  if (minutesLeft !== null && minutesLeft > 0) {
+  if (secondsLeft !== null && secondsLeft > 0) {
     timerSection.classList.remove("hidden");
-    timerValue.textContent = formatTime(minutesLeft);
+    timerValue.textContent = formatTime(secondsLeft);
   } else {
     timerSection.classList.add("hidden");
   }
 }
 
-// Mise à jour initiale et périodique du timer (toutes les 10 secondes)
+// Mise à jour initiale et périodique du timer (chaque seconde)
 updateTimer();
-setInterval(updateTimer, 10000);
+setInterval(updateTimer, 1000);
 
 document.getElementById("backBtn").addEventListener("click", () => {
   if (window.history.length <= 1) {
