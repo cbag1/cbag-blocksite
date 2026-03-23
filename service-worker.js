@@ -17,6 +17,17 @@ const {
 
 const blockedPage = chrome.runtime.getURL("blocked.html");
 
+function buildRedirectUrl(targetUrl, match) {
+  const intervalsParam = match.group.intervals.length ? match.group.intervals.join(",") : "";
+
+  return (
+    `${blockedPage}?blocked=${encodeURIComponent(targetUrl)}` +
+    `&rule=${encodeURIComponent(match.matchedPattern)}` +
+    `&group=${encodeURIComponent(match.group.name)}` +
+    (intervalsParam ? `&intervals=${encodeURIComponent(intervalsParam)}` : "")
+  );
+}
+
 function findBlockingGroup(url, groups) {
   const hostname = tryGetHostname(url);
   if (!hostname) return null;
@@ -96,15 +107,7 @@ async function handleNavigation(details) {
   const match = findBlockingGroup(details.url, groups);
   if (!match) return;
 
-  const intervalsParam = match.group.intervals.length 
-    ? match.group.intervals.join(",")
-    : "";
-
-  const redirectUrl =
-    `${blockedPage}?blocked=${encodeURIComponent(details.url)}` +
-    `&rule=${encodeURIComponent(match.matchedPattern)}` +
-    `&group=${encodeURIComponent(match.group.name)}` +
-    (intervalsParam ? `&intervals=${encodeURIComponent(intervalsParam)}` : "");
+  const redirectUrl = buildRedirectUrl(details.url, match);
 
   await chrome.tabs.update(details.tabId, { url: redirectUrl });
 }
@@ -144,6 +147,20 @@ chrome.webNavigation.onBeforeNavigate.addListener((details) => {
   });
 });
 
+chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
+  handleNavigation(details).catch((error) => {
+    console.error("History navigation handler failed", error);
+  });
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status !== "complete" || !tab.url) return;
+
+  handleNavigation({ tabId, frameId: 0, url: tab.url }).catch((error) => {
+    console.error("Tab update handler failed", error);
+  });
+});
+
 async function checkAndRedirectAllTabs() {
   const { enabled, groups } = await getSettings();
   if (!enabled || !groups.length) return;
@@ -155,14 +172,28 @@ async function checkAndRedirectAllTabs() {
     const match = findBlockingGroup(tab.url, groups);
     if (!match) continue;
 
-    const redirectUrl =
-      `${blockedPage}?blocked=${encodeURIComponent(tab.url)}` +
-      `&rule=${encodeURIComponent(match.matchedPattern)}` +
-      `&group=${encodeURIComponent(match.group.name)}`;
+    const redirectUrl = buildRedirectUrl(tab.url, match);
 
     chrome.tabs.update(tab.id, { url: redirectUrl }).catch(() => {});
   }
 }
+
+function scheduleCheckAndRedirectAllTabs() {
+  checkAndRedirectAllTabs().catch((error) => {
+    console.error("Automatic tab check failed", error);
+  });
+}
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName !== "local") return;
+  if (!changes[ENABLED_KEY] && !changes[GROUPS_KEY]) return;
+
+  scheduleCheckAndRedirectAllTabs();
+});
+
+chrome.tabs.onActivated.addListener(() => {
+  scheduleCheckAndRedirectAllTabs();
+});
 
 const INTERVAL_ALARM = "intervalCheck";
 
@@ -170,8 +201,8 @@ chrome.alarms.create(INTERVAL_ALARM, { periodInMinutes: 1 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === INTERVAL_ALARM) {
-    checkAndRedirectAllTabs().catch((error) => {
-      console.error("Interval alarm check failed", error);
-    });
+    scheduleCheckAndRedirectAllTabs();
   }
 });
+
+scheduleCheckAndRedirectAllTabs();

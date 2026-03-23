@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Cbag Site Blocker",
   "description": "Bloque automatiquement des sites selon des groupes et des horaires, avec redirection immediate meme sans rechargement.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "permissions": ["storage", "tabs", "webNavigation", "alarms"],
   "host_permissions": ["http://*/*", "https://*/*"],
   "background": {
